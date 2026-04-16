@@ -1,0 +1,69 @@
+@import "tailwindcss";
+
+@theme {
+  --color-cloud: #f8f6f1;
+  --color-ink: #111111;
+  --color-gold: #c7a554;
+  --color-mist: #ebe5d6;
+
+  --shadow-glass: 0 24px 80px rgba(15, 23, 42, 0.12);
+  --shadow-soft: inset 0 18px 50px rgba(255, 255, 255, 0.18), 0 16px 40px rgba(15, 23, 42, 0.08);
+  --shadow-tile: 0 18px 40px rgba(15, 23, 42, 0.1);
+
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-display: var(--font-poppins), var(--font-inter), system-ui, sans-serif;
+}
+
+:root {
+  --background: #fbfaf7;
+  --foreground: #111111;
+}
+
+@layer base {
+  body {
+    margin: 0;
+    min-height: 100vh;
+    overflow-x: hidden;
+    color: var(--foreground);
+    background:
+      radial-gradient(circle at top left, rgba(255, 255, 255, 0.94), transparent 24%),
+      radial-gradient(circle at 84% 14%, rgba(207, 177, 106, 0.18), transparent 18%),
+      radial-gradient(circle at 70% 58%, rgba(255, 255, 255, 0.9), transparent 24%),
+      linear-gradient(180deg, #fbfaf7 0%, #f4efe3 100%);
+    font-family: var(--font-sans);
+  }
+}
+
+@layer utilities {
+  .glass-panel {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.68), rgba(255, 255, 255, 0.38));
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.72),
+      0 24px 60px rgba(17, 24, 39, 0.08);
+  }
+
+  .glass-soft {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.58), rgba(255, 255, 255, 0.28));
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.72),
+      0 18px 46px rgba(17, 24, 39, 0.06);
+    transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .noise-mask {
+    position: absolute;
+    inset: 0;
+    background-image:
+      radial-gradient(rgba(255, 255, 255, 0.28) 0.8px, transparent 0.8px),
+      radial-gradient(rgba(17, 24, 39, 0.06) 0.7px, transparent 0.7px);
+    background-position: 0 0, 12px 12px;
+    background-size: 24px 24px;
+    opacity: 0.16;
+    pointer-events: none;
+    z-index: 0;
+  }
+}
