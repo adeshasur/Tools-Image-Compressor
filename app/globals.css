@@ -1,18 +1,6 @@
-@import "tailwindcss";
-
-@theme {
-  --color-cloud: #f8f6f1;
-  --color-ink: #111111;
-  --color-gold: #c7a554;
-  --color-mist: #ebe5d6;
-
-  --shadow-glass: 0 24px 80px rgba(15, 23, 42, 0.12);
-  --shadow-soft: inset 0 18px 50px rgba(255, 255, 255, 0.18), 0 16px 40px rgba(15, 23, 42, 0.08);
-  --shadow-tile: 0 18px 40px rgba(15, 23, 42, 0.1);
-
-  --font-sans: var(--font-inter), system-ui, sans-serif;
-  --font-display: var(--font-poppins), var(--font-inter), system-ui, sans-serif;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
   --background: #fbfaf7;
@@ -30,11 +18,15 @@
       radial-gradient(circle at 84% 14%, rgba(207, 177, 106, 0.18), transparent 18%),
       radial-gradient(circle at 70% 58%, rgba(255, 255, 255, 0.9), transparent 24%),
       linear-gradient(180deg, #fbfaf7 0%, #f4efe3 100%);
-    font-family: var(--font-sans);
+    font-family: var(--font-inter), system-ui, sans-serif;
   }
 }
 
 @layer utilities {
+  .font-display {
+    font-family: var(--font-poppins), var(--font-inter), system-ui, sans-serif;
+  }
+
   .glass-panel {
     background: linear-gradient(180deg, rgba(255, 255, 255, 0.68), rgba(255, 255, 255, 0.38));
     backdrop-filter: blur(24px);
