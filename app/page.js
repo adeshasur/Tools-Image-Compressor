@@ -1,20 +1,15 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback } from "react";
 import imageCompression from "browser-image-compression";
-import { motion, AnimatePresence } from "framer-motion";
 import { 
-  FileImage, 
   UploadCloud, 
   Download, 
-  X, 
-  Zap, 
-  CheckCircle2, 
-  Scaling, 
-  Sparkles,
-  ArrowRight,
-  Monitor,
-  ShieldCheck
+  ArrowLeft,
+  Settings,
+  Image as ImageIcon,
+  Zap,
+  Info
 } from "lucide-react";
 
 export default function ImageCompressor() {
@@ -43,9 +38,7 @@ export default function ImageCompressor() {
         initialQuality: q,
       };
       const compressedBlob = await imageCompression(file, options);
-      const newFile = new File([compressedBlob], file.name, {
-        type: file.type,
-      });
+      const newFile = new File([compressedBlob], file.name, { type: file.type });
       setCompressedFile(newFile);
     } catch (error) {
       console.error("Compression error:", error);
@@ -54,23 +47,15 @@ export default function ImageCompressor() {
     }
   };
 
-  const handleQualityChange = (newQ) => {
-    setQuality(newQ);
-    if (originalFile) {
-      processCompression(originalFile, newQ);
-    }
-  };
-
   const downloadImage = () => {
     if (!compressedFile) return;
     const url = URL.createObjectURL(compressedFile);
     const link = document.createElement("a");
     link.href = url;
-    link.download = `elite-compressed-${originalFile.name}`;
+    link.download = `compressed-${originalFile.name}`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    URL.revokeObjectURL(url);
   };
 
   const formatSize = (bytes) => {
@@ -81,65 +66,44 @@ export default function ImageCompressor() {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
   };
 
-  const savingsPercent = originalFile && compressedFile 
-    ? Math.round(((originalFile.size - compressedFile.size) / originalFile.size) * 100)
-    : 0;
-
   return (
-    <div className="relative flex flex-col min-h-screen selection:bg-gold/20 selection:text-gold selection:font-bold">
-      {/* Background Layers */}
-      <div className="fixed inset-0 z-0 bg-white/40" />
+    <div className="min-h-screen bg-[#f5f5f7] font-sans selection:bg-blue-100">
+      {/* Background Grid */}
       <div 
-        className="tools-grid-animated fixed inset-0 z-0 opacity-40 pointer-events-none"
+        className="fixed inset-0 opacity-[0.03] pointer-events-none"
         style={{
-          backgroundImage: "linear-gradient(rgba(17,24,39,0.06) 1.2px, transparent 1.2px), linear-gradient(90deg, rgba(17,24,39,0.06) 1.2px, transparent 1.2px)",
-          backgroundSize: "42px 42px"
+          backgroundImage: "linear-gradient(#000 1.2px, transparent 1.2px), linear-gradient(90deg, #000 1.2px, transparent 1.2px)",
+          backgroundSize: "24px 24px"
         }}
       />
-      <div className="noise-mask fixed inset-0 z-[1]" />
-      
-      {/* Header */}
-      <header className="relative z-10 px-6 py-10 md:px-12 md:py-16">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-end justify-between gap-6">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="space-y-4"
-          >
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-ink/5 bg-white/70 backdrop-blur-md text-[10px] font-extrabold tracking-[0.2em] text-gold uppercase shadow-sm">
-              <Sparkles className="w-3 h-3" />
-              Creative Utility
-            </div>
-            <div className="flex items-center gap-4">
-               <div className="w-14 h-14 rounded-2xl bg-ink flex items-center justify-center text-white shadow-glass rotate-[-4deg]">
-                  <Scaling className="w-7 h-7" />
-               </div>
-               <div>
-                  <h1 className="text-4xl md:text-5xl font-display font-semibold tracking-[-0.06em] text-ink">Image Compressor</h1>
-                  <p className="text-sm text-ink/40 font-bold uppercase tracking-[0.3em] mt-1">High-Fidelity Assets</p>
-               </div>
-            </div>
-          </motion.div>
-          
-          <div className="flex items-center gap-3 px-6 py-3 rounded-2xl border border-gold/10 bg-gold/5 backdrop-blur-md text-[11px] font-bold text-gold/80 shadow-inner">
-            <ShieldCheck className="w-4 h-4" />
-            LOCAL-FIRST ENCRYPTION
-          </div>
-        </div>
-      </header>
 
-      {/* Main UI */}
-      <main className="relative z-10 flex-grow px-6 pb-20 md:px-12">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[1fr_420px] gap-12 items-start">
+      {/* Standard Adheesha Navbar */}
+      <nav className="relative z-10 max-w-4xl mx-auto pt-8 px-4">
+        <div className="flex items-center justify-between bg-white/70 backdrop-blur-xl border border-white/40 px-6 py-4 rounded-[2rem] shadow-sm">
+          <span className="text-sm font-semibold text-gray-800">Adheesha Sooriyaarachchi</span>
+          <a 
+            href="https://info-adheesha.vercel.app/"
+            className="flex items-center gap-2 bg-gray-900 text-white text-xs font-medium px-5 py-2.5 rounded-full hover:bg-black transition-all shadow-md active:scale-95"
+          >
+            Back to Portfolio
+          </a>
+        </div>
+      </nav>
+
+      <main className="relative z-10 max-w-4xl mx-auto px-4 py-12">
+        <div className="bg-white/60 backdrop-blur-2xl border border-white/50 rounded-[2.5rem] shadow-xl overflow-hidden min-h-[520px] flex flex-col md:flex-row">
           
-          {/* Left Side: Drag & Drop + Controls */}
-          <section className="space-y-12">
-            <motion.div 
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              className={`relative group h-[480px] flex flex-col items-center justify-center rounded-[3rem] border border-ink/5 transition-all duration-700 overflow-hidden holographic-grain border-glow-luminous shadow-glass bg-white/60 ${
-                dragActive ? "scale-[0.98] bg-gold/5" : ""
-              }`}
+          {/* Left Pane: Ingest */}
+          <div className="flex-1 p-8 md:p-12 border-b md:border-b-0 md:border-r border-gray-100 flex flex-col">
+            <div className="mb-8">
+              <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-widest mb-2">Input Image</h2>
+              <p className="text-xs text-gray-400 font-medium">Auto-optimization while you adjust.</p>
+            </div>
+
+            <div 
+              className={`flex-grow relative group flex flex-col items-center justify-center rounded-[2rem] border-2 border-dashed transition-all duration-500 ${
+                dragActive ? "border-blue-400 bg-blue-50/30 scale-[0.98]" : "border-gray-100 hover:border-gray-200"
+              } ${originalFile ? "bg-white/40" : "bg-gray-50/20"}`}
               onDragOver={(e) => { e.preventDefault(); setDragActive(true); }}
               onDragLeave={() => setDragActive(false)}
               onDrop={(e) => {
@@ -150,247 +114,126 @@ export default function ImageCompressor() {
               }}
             >
               {originalFile ? (
-                <div className="absolute inset-0 flex flex-col">
-                  <div className="absolute inset-0 z-0">
-                    <img 
-                      src={URL.createObjectURL(originalFile)} 
-                      className="w-full h-full object-cover opacity-10 blur-2xl scale-125 transition-transform duration-1000 group-hover:scale-110" 
-                      alt="Background"
-                    />
+                <div className="text-center p-6 w-full h-full flex flex-col items-center justify-center">
+                  <div className="w-16 h-16 bg-white rounded-2xl shadow-sm flex items-center justify-center mb-4 border border-gray-50">
+                    <ImageIcon className="w-8 h-8 text-gray-400" />
                   </div>
-                  <div className="relative z-10 flex-grow flex flex-col items-center justify-center p-12">
-                     <div className="w-24 h-24 rounded-[2rem] bg-white shadow-glass flex items-center justify-center text-ink mb-6 border border-ink/5 group-hover:rotate-6 transition-transform">
-                        <FileImage className="w-10 h-10" />
-                     </div>
-                     <h3 className="text-lg font-display font-semibold text-ink mb-2 truncate max-w-sm">{originalFile.name}</h3>
-                     <p className="text-xs font-bold text-ink/40 uppercase tracking-widest mb-8">{formatSize(originalFile.size)} FILE</p>
-                     
-                     <div className="flex gap-4">
-                        <button 
-                           onClick={() => setOriginalFile(null)}
-                           className="px-8 py-3 rounded-2xl border border-ink/10 bg-white/90 text-[11px] font-extrabold text-ink/60 hover:bg-white hover:text-ink transition-all shadow-sm"
-                        >
-                           REPLACE
-                        </button>
-                     </div>
-                  </div>
+                  <h3 className="text-sm font-semibold text-gray-800 truncate max-w-[200px] mb-1">{originalFile.name}</h3>
+                  <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-6">{formatSize(originalFile.size)}</p>
+                  
+                  <button 
+                    onClick={() => setOriginalFile(null)}
+                    className="text-[10px] font-black uppercase tracking-widest text-red-400 hover:text-red-500 transition-colors"
+                  >
+                    Remove Asset
+                  </button>
                 </div>
               ) : (
-                <div className="flex flex-col items-center text-center p-12">
-                   <div className="relative mb-8">
-                      <div className="w-24 h-24 rounded-[2.5rem] bg-ink flex items-center justify-center text-white shadow-[0_24px_50px_rgba(17,24,39,0.3)] group-hover:scale-110 group-hover:rotate-[8deg] transition-all duration-700">
-                         <UploadCloud className="w-10 h-10" />
-                      </div>
-                      <div className="absolute -top-2 -right-2 w-8 h-8 rounded-full bg-gold flex items-center justify-center text-white shadow-md animate-bounce">
-                         <Sparkles className="w-4 h-4" />
-                      </div>
-                   </div>
-                   <h2 className="text-3xl font-display font-semibold text-ink mb-4 tracking-[-0.04em]">Ingest your imagery</h2>
-                   <p className="text-ink/40 text-[15px] font-medium max-w-[320px] leading-relaxed mb-10">
-                      Drag high-resolution assets here to begin the optimization cycle.
-                   </p>
-                   <div className="relative">
-                      <input 
-                        type="file" 
-                        accept="image/*"
-                        className="absolute inset-0 opacity-0 cursor-pointer z-20"
-                        onChange={(e) => handleFile(e.target.files[0])}
-                      />
-                      <button className="px-10 py-4 rounded-2xl bg-white border border-ink/10 shadow-glass text-[11px] font-extrabold text-ink uppercase tracking-widest group-hover:bg-ink group-hover:text-white transition-all duration-500">
-                         Browse Local
-                      </button>
-                   </div>
+                <div className="text-center p-6 flex flex-col items-center">
+                  <div className="w-14 h-14 bg-white rounded-2xl shadow-sm flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                    <UploadCloud className="w-6 h-6 text-gray-300" />
+                  </div>
+                  <p className="text-xs font-medium text-gray-400 mb-8 max-w-[150px] leading-relaxed">
+                    Drop your image here or browse local files
+                  </p>
+                  <label className="relative overflow-hidden group/btn px-8 py-3 bg-gray-50 border border-gray-100 rounded-xl text-[10px] font-black uppercase tracking-widest text-gray-400 cursor-pointer hover:bg-gray-100 hover:text-gray-600 transition-all">
+                    <span>Browse Local</span>
+                    <input 
+                      type="file" 
+                      accept="image/*" 
+                      className="hidden" 
+                      onChange={(e) => handleFile(e.target.files[0])} 
+                    />
+                  </label>
                 </div>
               )}
-            </motion.div>
+            </div>
 
-            {/* Elite Quality Controller */}
-            <motion.div 
-               initial={{ opacity: 0, y: 20 }}
-               animate={{ opacity: 1, y: 0 }}
-               transition={{ delay: 0.2 }}
-               className="glass-panel rounded-[2.5rem] p-10 holographic-grain border-glow-luminous"
-            >
-              <div className="flex items-center justify-between mb-10">
-                <div>
-                  <h3 className="text-xs font-black uppercase tracking-[0.3em] text-ink/30 mb-1">Compression Engine</h3>
-                  <p className="text-xl font-display font-semibold text-ink tracking-tight">Master Fidelity</p>
-                </div>
-                <div className="px-5 py-2 rounded-xl bg-ink text-white font-display font-bold text-lg shadow-glass">
-                   {Math.round(quality * 100)}%
-                </div>
-              </div>
-              
-              <div className="relative group/slider mb-12">
-                <input 
-                  type="range"
-                  min="0.1"
-                  max="0.9"
-                  step="0.01"
-                  value={quality}
-                  onChange={(e) => handleQualityChange(parseFloat(e.target.value))}
-                  className="w-full h-1.5 bg-ink/5 rounded-full appearance-none cursor-pointer accent-gold outline-none"
-                />
-                <div className="flex justify-between mt-4 text-[10px] font-black uppercase tracking-[0.2em] text-ink/20">
-                   <span>Performance</span>
-                   <span>Balanced</span>
-                   <span>Quality</span>
-                </div>
-              </div>
+            <div className="mt-8 flex items-center gap-3 text-gray-400">
+               <Info className="w-4 h-4 opacity-40 shrink-0" />
+               <p className="text-[10px] font-medium leading-relaxed">Images stay on your device. Zero data is sent to servers.</p>
+            </div>
+          </div>
 
-              <div className="grid grid-cols-3 gap-4">
-                {[
-                  { l: "MAX SPEED", v: 0.2, c: "text-amber-600" },
-                  { l: "BALANCED", v: 0.5, c: "text-ink/60" },
-                  { l: "MAX QUALITY", v: 0.8, c: "text-gold" }
-                ].map((p) => (
-                  <button
-                    key={p.l}
-                    onClick={() => handleQualityChange(p.v)}
-                    className={`h-16 rounded-2xl border transition-all duration-500 flex flex-col items-center justify-center gap-1 ${
-                      Math.abs(quality - p.v) < 0.01
-                        ? "bg-ink border-ink text-white shadow-glass -translate-y-1" 
-                        : "bg-white/50 border-ink/5 text-ink/40 hover:bg-white hover:border-ink/10"
-                    }`}
-                  >
-                    <span className="text-[9px] font-black uppercase tracking-[0.15em]">{p.l}</span>
-                    <span className={`text-[11px] font-extrabold ${Math.abs(quality - p.v) < 0.01 ? "text-gold/80" : "text-ink/30"}`}>{p.v * 100}%</span>
-                  </button>
-                ))}
-              </div>
-            </motion.div>
-          </section>
+          {/* Right Pane: Optimization */}
+          <div className="flex-1 p-8 md:p-12 bg-white/30 flex flex-col">
+            <div className="mb-10">
+              <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-widest mb-2">Live Optimization</h2>
+              <p className="text-xs text-gray-400 font-medium">Fine-tune your fidelity matrix.</p>
+            </div>
 
-          {/* Right Side: Elite Summary Card */}
-          <aside className="relative">
-            <AnimatePresence mode="wait">
-              {originalFile ? (
-                <motion.div
-                  key="results"
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 20 }}
-                  className="lg:sticky lg:top-12"
-                >
-                  <div className="relative glass-soft rounded-[3rem] p-10 border border-ink/5 shadow-glass overflow-hidden holographic-grain border-glow-luminous bg-white/70">
-                    <div className="relative w-full aspect-square bg-ink/5 rounded-[2.5rem] overflow-hidden mb-12 shadow-inner group">
-                      {compressedFile && !compressing && (
-                        <motion.img 
-                          initial={{ scale: 1.1, opacity: 0 }}
-                          animate={{ scale: 1, opacity: 1 }}
-                          src={URL.createObjectURL(compressedFile)} 
-                          className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" 
-                          alt="Compressed Preview"
-                        />
-                      )}
-                      
-                      {compressing && (
-                        <div className="absolute inset-0 bg-white/90 backdrop-blur-md flex flex-col items-center justify-center gap-4">
-                           <div className="relative">
-                              <Zap className="w-12 h-12 text-gold animate-pulse" />
-                              <div className="absolute inset-x-[-20px] bottom-[-10px] h-1.5 bg-gold/10 rounded-full overflow-hidden">
-                                 <motion.div 
-                                    className="h-full bg-gold"
-                                    animate={{ x: ["-100%", "100%"] }}
-                                    transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
-                                 />
-                              </div>
-                           </div>
-                           <p className="text-[10px] font-black uppercase tracking-[0.2em] text-gold">Optimizing Pixels</p>
+            <div className="space-y-10 flex-grow">
+               <div className="space-y-4">
+                  <div className="flex items-center justify-between mb-2">
+                     <span className="text-[10px] font-black uppercase tracking-widest text-gray-400">Quality Preset</span>
+                     <span className="text-sm font-bold text-gray-800">{Math.round(quality * 100)}%</span>
+                  </div>
+                  <input 
+                    type="range"
+                    min="0.1"
+                    max="0.9"
+                    step="0.01"
+                    value={quality}
+                    onChange={(e) => {
+                      const newQ = parseFloat(e.target.value);
+                      setQuality(newQ);
+                      if (originalFile) processCompression(originalFile, newQ);
+                    }}
+                    className="w-full h-1.5 bg-gray-200 rounded-full appearance-none cursor-pointer accent-black"
+                  />
+                  <div className="flex justify-between text-[8px] font-black uppercase tracking-widest text-gray-300">
+                    <span>Performance</span>
+                    <span>Standard</span>
+                    <span>High Fidelity</span>
+                  </div>
+               </div>
+
+               <div className="p-6 rounded-2xl border border-gray-50 bg-gray-50/40 space-y-4">
+                  <div className="flex justify-between items-end">
+                     <div>
+                        <p className="text-[9px] font-black uppercase tracking-widest text-gray-300 mb-1">Savings</p>
+                        <div className="text-3xl font-bold text-green-500 tracking-tight">
+                           {originalFile && compressedFile ? `-${Math.round(((originalFile.size - compressedFile.size) / originalFile.size) * 100)}%` : "--"}
                         </div>
-                      )}
-                    </div>
-
-                    <div className="space-y-8 mb-12">
-                      <div className="flex items-center justify-between">
-                         <div>
-                            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-ink/20 mb-1">Savings</p>
-                            <div className="text-4xl font-display font-bold text-gold tracking-tight">
-                               -{savingsPercent}%
-                            </div>
-                         </div>
-                         <div className="text-right">
-                            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-ink/20 mb-1">State</p>
-                            <span className="inline-flex items-center h-7 px-3 rounded-full bg-ink text-white text-[10px] font-black uppercase tracking-widest">
-                               PROCESSED
-                            </span>
-                         </div>
-                      </div>
-
-                      <div className="grid grid-cols-2 gap-4">
-                         <div className="p-5 rounded-3xl bg-white border border-ink/5 shadow-sm">
-                            <p className="text-[9px] font-black uppercase tracking-[0.15em] text-ink/30 mb-2">Source</p>
-                            <p className="text-sm font-bold text-ink/60 tracking-tight">{formatSize(originalFile.size)}</p>
-                         </div>
-                         <div className="p-5 rounded-3xl bg-white border border-gold/10 shadow-sm">
-                            <p className="text-[9px] font-black uppercase tracking-[0.15em] text-gold/60 mb-2">Elite</p>
-                            <p className="text-sm font-bold text-ink tracking-tight">
-                               {compressedFile ? formatSize(compressedFile.size) : "..."}
-                            </p>
-                         </div>
-                      </div>
-                    </div>
-
-                    <button
-                      onClick={downloadImage}
-                      disabled={!compressedFile || compressing}
-                      className="group relative w-full h-20 rounded-3xl bg-ink text-white font-bold text-sm overflow-hidden shadow-[0_24px_60px_rgba(17,24,39,0.3)] hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 disabled:scale-100"
-                    >
-                      <div className="relative z-10 flex items-center justify-center gap-3">
-                         {compressing ? "CALIBRATING..." : "DOWNLOAD MASTER"}
-                         <Download className={`w-5 h-5 transition-transform duration-500 ${compressing ? "animate-bounce" : "group-hover:translate-y-1"}`} />
-                      </div>
-                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
-                    </button>
+                     </div>
+                     <div className="text-right">
+                        <p className="text-[9px] font-black uppercase tracking-widest text-gray-300 mb-1">Status</p>
+                        <span className={`text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full ${compressedFile && !compressing ? "bg-green-100 text-green-600" : "bg-gray-100 text-gray-400"}`}>
+                           {compressing ? "CALIBRATING..." : compressedFile ? "PROCESSED" : "IDLE"}
+                        </span>
+                     </div>
                   </div>
                   
-                  <motion.div 
-                     initial={{ opacity: 0, scale: 0.95 }}
-                     animate={{ opacity: 1, scale: 1 }}
-                     className="mt-6 px-8 py-6 rounded-[2rem] border border-gold/15 bg-gold/5 flex gap-4 backdrop-blur-sm"
-                  >
-                     <div className="w-11 h-11 rounded-2xl bg-gold/20 flex items-center justify-center text-gold shrink-0">
-                        <CheckCircle2 className="w-6 h-6" />
+                  <div className="pt-4 border-t border-gray-100 grid grid-cols-2 gap-4">
+                     <div>
+                        <p className="text-[8px] font-black uppercase tracking-widest text-gray-300 mb-1">Original</p>
+                        <p className="text-xs font-bold text-gray-400">{originalFile ? formatSize(originalFile.size) : "--"}</p>
                      </div>
-                     <p className="text-[13px] leading-relaxed text-ink/60 font-medium">
-                        <strong className="text-gold font-bold">Optimization Complete.</strong> High-fidelity processing applied in RAM for zero disk footprint.
-                     </p>
-                  </motion.div>
-                </motion.div>
-              ) : (
-                <motion.div
-                  key="empty"
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  className="glass-soft rounded-[3rem] p-12 h-full min-h-[580px] flex flex-col items-center justify-center text-center holographic-grain border border-ink/5 shadow-glass bg-white/40"
-                >
-                   <div className="relative mb-8">
-                      <Monitor className="w-16 h-16 text-ink/10" />
-                      <Scaling className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-6 h-6 text-gold/20" />
-                   </div>
-                   <h4 className="text-xl font-display font-semibold text-ink/20 tracking-tight">System Idle</h4>
-                   <p className="mt-2 text-[11px] font-black uppercase tracking-[0.3em] text-ink/10">Awaiting asset link</p>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </aside>
+                     <div>
+                        <p className="text-[8px] font-black uppercase tracking-widest text-gray-300 mb-1">Optimized</p>
+                        <p className="text-xs font-bold text-gray-900">{compressedFile ? formatSize(compressedFile.size) : "--"}</p>
+                     </div>
+                  </div>
+               </div>
+            </div>
+
+            <button
+               onClick={downloadImage}
+               disabled={!compressedFile || compressing}
+               className="w-full h-14 bg-black text-white rounded-2xl flex items-center justify-center gap-3 text-[11px] font-black uppercase tracking-widest shadow-lg shadow-black/10 hover:shadow-xl hover:translate-y-[-2px] active:scale-95 transition-all disabled:opacity-30 disabled:translate-y-0 disabled:shadow-none"
+            >
+               {compressing ? "Calibrating..." : "Download Optimized PNG"}
+               <Download className="w-4 h-4" />
+            </button>
+          </div>
 
         </div>
       </main>
 
-      <footer className="relative z-10 px-12 py-16">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-10 border-t border-ink/5 pt-16 mt-16">
-          <div className="flex items-center gap-4">
-             <div className="w-10 h-10 rounded-xl bg-ink/5 flex items-center justify-center text-ink/20 font-display font-bold">IC</div>
-             <p className="text-[10px] font-black uppercase tracking-[0.3em] text-ink/30">
-               © 2026 Adheesha Sooriyaarachchi
-             </p>
-          </div>
-          <div className="flex gap-10">
-            <a href="#" className="text-[10px] font-black uppercase tracking-[0.3em] text-ink/20 hover:text-gold transition-colors">Privacy Matrix</a>
-            <a href="#" className="text-[10px] font-black uppercase tracking-[0.3em] text-ink/20 hover:text-gold transition-colors">Elite Documentation</a>
-          </div>
-        </div>
+      <footer className="text-center py-12 opacity-30">
+        <p className="text-[10px] font-black uppercase tracking-[0.4em] text-gray-500">
+           © 2026 Adheesha Sooriyaarachchi • Private Local-First Image Processing
+        </p>
       </footer>
     </div>
   );
