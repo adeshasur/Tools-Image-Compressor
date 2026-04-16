@@ -20,6 +20,9 @@ module.exports = {
         display: ["var(--font-poppins)", "system-ui", "sans-serif"],
         sans: ["var(--font-inter)", "system-ui", "sans-serif"],
       },
+      backgroundImage: {
+        grid: "linear-gradient(rgba(255,255,255,0.26) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.26) 1px, transparent 1px)"
+      }
     },
   },
   plugins: [],
